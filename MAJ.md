@@ -19,7 +19,10 @@ cd bacass_IBP
 ```
 Ajoutez le repo original comme remote (nommé upstream par convention) :
 
+```bash
 git remote add upstream https://github.com/NOM_UTILISATEUR_ORIGINAL/NOM_DU_REPO.git
+```
+
 Vérifier les Remotes :
 
 Vous pouvez vérifier que les remotes ont été correctement ajoutés en exécutant :
