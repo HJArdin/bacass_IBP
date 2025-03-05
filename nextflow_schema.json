@@ -5,6 +5,28 @@
     "description": "Simple bacterial assembly and annotation",
     "type": "object",
     "$defs": {
+        "reference_options": {
+            "title": "References options",
+            "type": "object",
+            "fa_icon": "fas fa-terminal",
+            "description": "Define where the pipeline should find references data.",
+            "required": ["path_db","can_ref"],
+            "properties": {
+                "path_db": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exist": true,
+                    "description": "Path to database for CanSNPer2 module",
+                    "help": "See https://github.com/FOI-Bioinformatics/CanSNPer2-data"
+                },
+                "can_ref": {
+                    "type": "string",
+                    "format": "directory-path",
+                    "description": "Directory where CanSNPer2 can found references genomes",
+                    "help": "See https://github.com/FOI-Bioinformatics/CanSNPer2/tree/master?tab=readme-ov-file#user-guide-cansnper2-for-custom-databases-see-below"
+                }
+            }
+        }   ,     
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",

@@ -15,6 +15,7 @@ include { MEDAKA                    } from '../modules/local/medaka'
 include { KRAKEN2_DB_PREPARATION    } from '../modules/local/kraken2_db_preparation'
 include { DFAST                     } from '../modules/local/dfast'
 include { MULTIQC_CUSTOM            } from '../modules/local/multiqc_custom'
+include { CANSNPER2                 } from '../modules/local/cansnper2'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -463,6 +464,18 @@ workflow BACASS {
             skip: true
         }
         .set{ ch_assembly_for_gunzip }
+
+///////////////////////////////////////////////////
+
+    // MODULE: CANsnper2, variant calling
+    if (!params.skip_typing) {
+        CANSNPER2 (
+            ch_assembly
+        )
+        ch_versions = ch_versions.mix(CANSNPER2.out.versions)
+    }
+
+///////////////////////////////////////////////////
 
     //
     // MODULE: PROKKA, gene annotation
