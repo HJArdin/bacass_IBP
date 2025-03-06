@@ -39,6 +39,8 @@ include { QUAST                                 } from '../modules/nf-core/quast
 include { QUAST as QUAST_BYREFSEQID             } from '../modules/nf-core/quast/main'
 include { GUNZIP                                } from '../modules/nf-core/gunzip/main'
 include { PROKKA                                } from '../modules/nf-core/prokka/main'
+include { ABRITAMR_RUN                          } from '../modules/nf-core/abritamr/run/main'
+include { ABRICATE_RUN                          } from '../modules/nf-core/abricate/run/main'
 
 //
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
@@ -85,6 +87,8 @@ workflow BACASS {
             longreads: long_fastq       != 'NA' ? tuple(meta,long_fastq) : null
             fast5: fast5                != 'NA' ? tuple(meta, fast5) : null
     }
+
+
     // See the documentation https://nextflow-io.github.io/nf-validation/samplesheets/fromSamplesheet/
     ch_samplesheet
         .multiMap (criteria)
@@ -103,6 +107,10 @@ workflow BACASS {
         .fast5
         .filter{ it != null }
         .set { ch_fast5 }
+
+    ch_shortreads.view()
+    ch_longreads.view()
+    ch_fast5.view()
 
     //
     // MODULE: Concatenate FastQ files from same sample if required (shortreads)
@@ -465,7 +473,18 @@ workflow BACASS {
         }
         .set{ ch_assembly_for_gunzip }
 
-///////////////////////////////////////////////////
+    // MODULE: ABRITAMR, gene resistance detection
+    if (!params.skip_resistance) {
+        ABRITAMR_RUN (
+            ch_assembly
+        )
+        ch_versions = ch_versions.mix(ABRITAMR_RUN.out.versions)
+        ABRICATE_RUN(
+            ch_assembly,
+            params.abricate_db
+        )
+        ch_versions = ch_versions.mix(ABRICATE_RUN.out.versions)
+    }
 
     // MODULE: CANsnper2, variant calling
     if (!params.skip_typing) {
@@ -474,8 +493,6 @@ workflow BACASS {
         )
         ch_versions = ch_versions.mix(CANSNPER2.out.versions)
     }
-
-///////////////////////////////////////////////////
 
     //
     // MODULE: PROKKA, gene annotation

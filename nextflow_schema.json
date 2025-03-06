@@ -24,6 +24,12 @@
                     "format": "directory-path",
                     "description": "Directory where CanSNPer2 can found references genomes",
                     "help": "See https://github.com/FOI-Bioinformatics/CanSNPer2/tree/master?tab=readme-ov-file#user-guide-cansnper2-for-custom-databases-see-below"
+                },
+                "abricate_db":{
+                    "type": "string",
+                    "format": "directory-path",
+                    "description": "Path to databse for Abricate default is CARD",
+                    "help": "See https://github.com/tseemann/abricate?tab=readme-ov-file#abricate"
                 }
             }
         }   ,     
@@ -84,6 +90,14 @@
                 "skip_fastp": {
                     "type": "boolean",
                     "description": "Skip FastP"
+                },
+                "skip_typing": {
+                    "type": "boolean",
+                    "description": "Skip CanSNPer2"
+                },
+                "skip_resistance": {
+                    "type": "boolean",
+                    "description": "Skip gene resistance detection"
                 }
             }
         },
